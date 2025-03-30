@@ -1,0 +1,67 @@
+[package]
+name = "ironfish"
+version = "0.3.0"
+license = "MPL-2.0"
+
+description = "Rust crate for interacting with transactions on the Iron Fish chain"
+keywords = ["iron-fish", "cryptocurrency", "blockchain"]
+
+# Do not include the sapling params to reduce the crate size (which otherwise
+# would be too big and would be rejected by crates.io). The build.rs script
+# will take care of downloading these files at build time.
+exclude = ["src/sapling_params/*.params"]
+
+[package.authors]
+workspace = true
+
+[package.edition]
+workspace = true
+
+[package.homepage]
+workspace = true
+
+[package.repository]
+workspace = true
+
+[features]
+default = ["transaction-proofs"]
+
+benchmark = []
+download-params = ["dep:reqwest"]
+note-encryption-stats = []
+transaction-proofs = ["dep:lazy_static"]
+
+[lib]
+name = "ironfish"
+path = "src/lib.rs"
+
+[dependencies]
+ironfish-bellperson = { version = "0.1.0", features = ["groth16"] }
+blake2b_simd = "1.0.0"
+blake2s_simd = "1.0.0"
+blake3 = "1.5.0"
+blstrs = { version = "0.6.0", features = ["portable"] }
+byteorder = "1.4.3"
+chacha20poly1305 = "0.10.1"
+crypto_box = { version = "0.9", features = ["std"] }
+ff = "0.12.0"
+group = "0.12.0"
+ironfish-frost = { version = "0.1.0" }
+fish_hash = "0.3.0"
+ironfish_zkp = { version = "0.2.0", path = "../ironfish-zkp" }
+ironfish-jubjub = { version = "0.1.0", features = ["multiply-many"] }
+lazy_static = { version = "1.4.0", optional = true }
+rand = "0.8.5"
+tiny-bip39 = "1.0"
+xxhash-rust = { version = "0.8.5", features = ["xxh3"] }
+argon2 = { version = "0.5.3", features = ["password-hash"] }
+hkdf = "0.12.4"
+sha2 = "0.10"
+
+[dev-dependencies]
+hex-literal = "0.4"
+
+[build-dependencies]
+hex = "0.4"
+reqwest = { optional = true, version = "0.11", features = ["blocking"] }
+sha2 = "0.10"

@@ -1,0 +1,12 @@
+{
+  "packages": [
+    "config/eslint-config-ironfish",
+    "config/eslint-plugin-ironfish",
+    "ironfish-cli",
+    "ironfish",
+    "ironfish-rust-nodejs"
+  ],
+  "version": "independent",
+  "npmClient": "yarn",
+  "useWorkspaces": true
+}

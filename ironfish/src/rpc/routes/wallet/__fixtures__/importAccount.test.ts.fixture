@@ -1,0 +1,30 @@
+{
+  "Route wallet/importAccount should set the account createdAt field to the createdAt sequence": [
+    {
+      "header": {
+        "sequence": 2,
+        "previousBlockHash": "4791D7AE9F97DF100EF1558E84772D6A09B43762388283F75C6F20A32A88AA86",
+        "noteCommitment": {
+          "type": "Buffer",
+          "data": "base64:PErSjRMtlbNv+Ez76HDHwjoLYHlWfsThEeOwx1J+Ykg="
+        },
+        "transactionCommitment": {
+          "type": "Buffer",
+          "data": "base64:TnIIRJN6SGgXRCbUbeDCqmkqixL45hqZnAMkZo562/I="
+        },
+        "target": "9282972777491357380673661573939192202192629606981189395159182914949423",
+        "randomness": "0",
+        "timestamp": 1737584858569,
+        "graffiti": "0000000000000000000000000000000000000000000000000000000000000000",
+        "noteSize": 4,
+        "work": "0"
+      },
+      "transactions": [
+        {
+          "type": "Buffer",
+          "data": "base64:AQAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGzKiP////8AAAAAjjfOk3zFvl4X0gc0+Edik4IKZBVMvetUHhWfGH2YZd2pOTbDZqTC+bgX+ivUayNYYZCYDOdkx+SCld2kf4wizgUU2/Q1njpu9b/h2tBNdgqoq0wtzI/JMI5sTYFD9vahswdC0fSqEuGLc5c0dpLlNeKJhTw8BaqPUMsv61aAXDYGpsedyaRncJX1wN4vieVWxABKPl7Tdrb8NOeCsyaZqnpCKNQQj0C+AdSJxH+4PN6kjmahMzvOJCo75pP535xIJt4ioYl7lHa8nkQbW3YfO0eEgbhZGaobQ59GOwL8R+ZLYMIywbZnMYiL3JyBzM1rGiSZJg8tkgc72yAtRTeFDU0h4EVgjnxyuPQAllzZEZfchwFZBMgfp/RkmR/7qBUwjUHYApooqHRI7tX3BwKmCu1xOmV3GspST9hlsG30Dw87c+hZOd7QKARIJnP3m7x/oVcG7bnTdIdVa3tKiKPom/i2jtLlE9/WF5UTMgigMiDZiDPMZwAuW4LIhf6b+EMRYG0Xq3Jup7dHn4spuqcHoxz6XTiyjF8/uBIPOY3OAfNcgfFYhhXi3yA17+g2uFTvF8mNnAeeVvjA7RokqJO8styTh+6UfJ0gCrnw8w0zWA2SqAOEIA4OsElyb24gRmlzaCBub3RlIGVuY3J5cHRpb24gbWluZXIga2V5MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAw+Xsi+aV7dRmHs0yz+Ya01MITxcbNY0L5VEhJsM9Np8qnyzTngxuAzDO+buYrfXDWzeZQb4FgbOa+LJ33s3y2CQ=="
+        }
+      ]
+    }
+  ]
+}

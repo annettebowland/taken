@@ -1,0 +1,38 @@
+{
+  "VerifyTransactionsTask execute verifies the transaction": [
+    {
+      "value": {
+        "encrypted": false,
+        "version": 4,
+        "id": "cfb7cdf9-f6c3-4c5d-b2b8-3ac8a6b80f6a",
+        "name": "test",
+        "spendingKey": "d846231c8e5608fac97051a72cda664d47cb8ef854a7bf55f3d2f2b532fe482d",
+        "viewKey": "f9a1c0d78b9e513b44d1df7c25145eae0aea1466def0daaf157876b1a1a2c3de75e17750c61873d7a8b012b6f2f8660b14cd706b4bf5aba15777379a6b5a0493",
+        "incomingViewKey": "9bbac632c85eee0eb71970df7e05856fb2072ce7008269b47f8c876f916fd206",
+        "outgoingViewKey": "b34e1252d751b5c49d4581912855afa5cabb888510c7796111616dc75a4c9274",
+        "publicAddress": "bee2eba31e1e4ff098a3a8187269af91fc8808c0c17edce15ad6496933b94c71",
+        "createdAt": {
+          "sequence": 1,
+          "hash": {
+            "type": "Buffer",
+            "data": "base64:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+          }
+        },
+        "scanningEnabled": true,
+        "proofAuthorizingKey": "5f22219222a2c284824579fdf90a2d39d4deb7dd4a1546b7781e003fb073e006",
+        "ledger": false
+      },
+      "head": {
+        "hash": {
+          "type": "Buffer",
+          "data": "base64:R5HXrp+X3xAO8VWOhHctagm0N2I4goP3XG8goyqIqoY="
+        },
+        "sequence": 1
+      }
+    },
+    {
+      "type": "Buffer",
+      "data": "base64:AQAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGzKiP////8AAAAAAsYjyv6XvNNFCkZGxkhu/FKca3G12UBhbEvZilMOnMeoW5rSF9etu/e6e1D9Ap5VOltMr8ZLB7qTqXuQ5hji72UY8VbQJxXXpdwOJhIwIlaMAquHwOsdE/RbmQjwDJzVrx/u+/uNue7FRzynAzkcTV9nyV8PhAmyJrJ2kjHbcE8VNBGb5qhv9T8EB8rMayXlPUt2aYfGXnMkBx8tuPX1pwD0G6b8W5p/QdK34LGVBC+s6Og6dRmuGOoLfYcyuXRcW90chvqwYMaiJ8m2GagJQCsBDTlOKXrloDKzcFOygCWsVMOT1dMmrVH32jy0lly9FKiZ1GgMtWWp6/Bwc/1qCFBc5p+NSBF7xtoVTM0F5nBMdoDorU40Cw+tLEiX0yQDxYiyFPKYfbSjhdbbRdq0mDcXwWvRlh9AbzaFqK1OoKFy6CcW5pHp8p+yLDysmHM1oLOYIJMpkD9mBA6JJmJYhp4tJ4EZnSu9Rl2jMGj/ZMDafGLRS6CKz+jCQoR9KSHPLtVpWMk95SPdkf25CJCwFZBophmt1WP9VbzYhphVqZ9+2UxYe9yz52iuLfciZNBffXR+4XCH4B9oSg+1Dr+7wZOpz+OOqTg2WE2dNL6AsAJzDjO3CdBiEUlyb24gRmlzaCBub3RlIGVuY3J5cHRpb24gbWluZXIga2V5MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwzbuoT/NOahiks/Nw9Ktfg3cMNOQoCIF/LM+x3Gi7hS2zA6sFjXJrgFCW22Zl5UOWuwDGjosHn51cIxmq8q7OBw=="
+    }
+  ]
+}

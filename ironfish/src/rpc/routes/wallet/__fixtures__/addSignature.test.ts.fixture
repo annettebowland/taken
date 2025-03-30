@@ -1,0 +1,34 @@
+{
+  "Route wallet/addSignature should return error if signature is not a valid hex": [
+    {
+      "value": {
+        "encrypted": false,
+        "version": 4,
+        "id": "7115daae-d034-4a7b-856f-2e2e9010df06",
+        "name": "addSignatureAccount",
+        "spendingKey": "f355495ea04a87b2aa1d5967ccb66add24cbaaec50b12ff7fcb733b223a9bc41",
+        "viewKey": "919c65de5667bb518117151ffe34758aac30216b0a76fe7e9a423413b539652cb95e3789fbc3e8c2706021dd81827c5cd61eb5b8377aa31dd7511f9637002de3",
+        "incomingViewKey": "70034d76236b8e6e8947ff7cffd8b621337fa1b57703d44443eac55c201fd304",
+        "outgoingViewKey": "855d2fdf6fdb70ff1789fb9b020bb895c859284312d6cafab8e3736b19fcbb83",
+        "publicAddress": "a1bb5fe2cc7567f13b17ce095c6da8133908c4c5c0c8b999edac5528ada9dc88",
+        "createdAt": {
+          "sequence": 1,
+          "hash": {
+            "type": "Buffer",
+            "data": "base64:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+          }
+        },
+        "scanningEnabled": true,
+        "proofAuthorizingKey": "1bcde5e77bbdd944badd4bb525089c2630e6d7d83e3e121272f2cce66b873708",
+        "ledger": false
+      },
+      "head": {
+        "hash": {
+          "type": "Buffer",
+          "data": "base64:R5HXrp+X3xAO8VWOhHctagm0N2I4goP3XG8goyqIqoY="
+        },
+        "sequence": 1
+      }
+    }
+  ]
+}

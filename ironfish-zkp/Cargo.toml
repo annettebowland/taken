@@ -1,0 +1,34 @@
+[package]
+name = "ironfish_zkp"
+version = "0.2.0"
+license = "MIT OR Apache-2.0"
+
+description = "Sapling API and zero-knowledge proving mechanism for the Iron Fish node"
+keywords = ["iron-fish", "sapling", "zero-knowledge"]
+
+[package.authors]
+workspace = true
+
+[package.edition]
+workspace = true
+
+[package.homepage]
+workspace = true
+
+[package.repository]
+workspace = true
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+ironfish-bellperson = { version = "0.1.0", features = ["groth16"] }
+blake2s_simd = "1.0.0"
+blstrs = { version = "0.6.0", features = ["portable"] }
+byteorder = "1.4.3"
+ff = "0.12.0"
+group = "0.12.0"
+ironfish-jubjub = { version = "0.1.0" }
+lazy_static = "1.4.0"
+rand = "0.8.5"
+ironfish-primitives = { version = "0.1.0" }
+ironfish-proofs = { version = "0.1.0" }

@@ -1,0 +1,253 @@
+on:
+  pull_request:
+    paths:
+      - "benchmarks/**"
+      - "ironfish-mpc/**"
+      - "ironfish-phase2/**"
+      - "ironfish-rust/**"
+      - "ironfish-rust-nodejs/**"
+      - "ironfish-rust-wasm/**"
+      - "ironfish-zkp/**"
+      - "rust-toolchain"
+      - ".github/workflows/rust*"
+      - ".cargo/**"
+      - "Cargo*"
+  push:
+    branches:
+      - master
+    paths:
+      - "benchmarks/**"
+      - "ironfish-mpc/**"
+      - "ironfish-phase2/**"
+      - "ironfish-rust/**"
+      - "ironfish-rust-nodejs/**"
+      - "ironfish-rust-wasm/**"
+      - "ironfish-zkp/**"
+      - "rust-toolchain"
+      - ".github/workflows/rust*"
+      - ".cargo/**"
+      - "Cargo*"
+
+name: Rust CI
+
+jobs:
+  rust_lint:
+    name: Lint Rust
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Rust
+        uses: Swatinem/rust-cache@v2
+        with:
+          save-if: false
+          shared-key: base
+
+      # Note: ironfish-zkp is does not need this due to different licensing
+      - name: Check for license headers for ironfish-rust
+        run: ./ci/lintHeaders.sh ./ironfish-rust/src *.rs
+
+      - name: Check for license headers for ironfish-rust-nodejs
+        run: ./ci/lintHeaders.sh ./ironfish-rust-nodejs/src *.rs
+
+      - name: Check for license headers for ironfish-rust-wasm
+        run: ./ci/lintHeaders.sh ./ironfish-rust-wasm/src *.rs
+
+      - name: cargo fmt
+        run: |
+          cargo fmt --all -- --check
+
+      - name: cargo clippy
+        run: |
+          cargo clippy --all-targets --all-features -- -D warnings
+
+  cargo_check:
+    name: Check Rust
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Rust
+        uses: Swatinem/rust-cache@v2
+        with:
+          save-if: false
+          shared-key: base
+
+      - name: Install cargo-all-features
+        run: |
+          cargo install --locked cargo-all-features
+
+      - name: Check that cargo lockfile is up to date
+        run: |
+          cargo check-all-features --locked --all-targets
+
+  cargo_vet:
+    name: Vet Dependencies
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Rust
+        uses: Swatinem/rust-cache@v2
+        with:
+          save-if: false
+          shared-key: base
+
+      - name: Install cargo-vet
+        run: |
+          cargo install --locked cargo-vet
+
+      - name: Vet dependencies
+        run: |
+          cargo vet
+
+  ironfish_rust:
+    name: Test ironfish-rust
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        shard: [1/2, 2/2]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: install cargo-llvm-cov
+        uses: taiki-e/install-action@cargo-llvm-cov
+
+      - name: Install nextest
+        uses: taiki-e/install-action@nextest
+
+      - name: Cache Rust
+        uses: Swatinem/rust-cache@v2
+        with:
+          shared-key: base
+
+      # Run tests to collect code coverage
+      - name: Run tests
+        run: |
+          cargo llvm-cov nextest \
+            --no-clean \
+            --codecov \
+            --output-path codecov.json \
+            --package ironfish \
+            --release \
+            --partition count:${{ matrix.shard }}
+
+      # Upload code coverage to Codecov
+      - name: Upload to codecov.io
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{secrets.CODECOV_TOKEN}}
+          flags: ironfish-rust
+
+  ironfish_rust_no_default_features:
+    name: Test ironfish-rust (no default features)
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        shard: [1/2, 2/2]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install nextest
+        uses: taiki-e/install-action@nextest
+
+      - name: Cache Rust
+        uses: Swatinem/rust-cache@v2
+        with:
+          shared-key: base
+
+      - name: Run tests
+        run: |
+          cargo nextest run \
+            --package ironfish \
+            --release \
+            --no-default-features \
+            --partition count:${{ matrix.shard }}
+
+  ironfish_rust_all_features:
+    name: Test ironfish-rust (all features)
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        shard: [1/2, 2/2]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install nextest
+        uses: taiki-e/install-action@nextest
+
+      - name: Cache Rust
+        uses: Swatinem/rust-cache@v2
+        with:
+          shared-key: base
+
+      - name: Run tests (all features)
+        run: |
+          cargo nextest run \
+            --package ironfish \
+            --release \
+            --all-features \
+            --partition count:${{ matrix.shard }}
+
+  ironfish_zkp:
+    name: Test ironfish-zkp
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: install cargo-llvm-cov
+        uses: taiki-e/install-action@cargo-llvm-cov
+
+      - name: Install nextest
+        uses: taiki-e/install-action@nextest
+
+      - name: Cache Rust
+        uses: Swatinem/rust-cache@v2
+        with:
+          shared-key: zkp
+
+      # Run tests to collect code coverage
+      - name: Run tests
+        run: |
+          cargo llvm-cov nextest \
+            --no-clean \
+            --codecov \
+            --output-path codecov.json \
+            --package ironfish_zkp \
+            --release
+
+      # Upload code coverage to Codecov
+      - name: Upload to codecov.io
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{secrets.CODECOV_TOKEN}}
+          flags: ironfish-zkp
+
+  ironfish_wasm:
+    name: Test ironfish-rust-wasm
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Rust
+        uses: Swatinem/rust-cache@v2
+        with:
+          shared-key: wasm
+
+      - name: Install wasm-pack
+        # use the installation method reccommended on
+        # https://rustwasm.github.io/docs/wasm-bindgen/wasm-bindgen-test/continuous-integration.html#github-actions
+        run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+
+      - name: Run tests in Firefox
+        run: |
+          cd ironfish-rust-wasm
+          wasm-pack test --headless --firefox
+
+      - name: Run tests in Chrome
+        run: |
+          cd ironfish-rust-wasm
+          wasm-pack test --headless --chrome

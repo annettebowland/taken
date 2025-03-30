@@ -1,0 +1,33 @@
+on:
+  push:
+    branches:
+      - master
+      - staging
+    paths:
+      - "ironfish-mpc/**"
+      - "ironfish-phase2/**"
+      - "ironfish-rust/**"
+      - "ironfish-rust-nodejs/**"
+      - "ironfish-zkp/**"
+      - "rust-toolchain"
+      - ".github/workflows/rust*"
+      - ".cargo/**"
+      - "Cargo*"
+
+name: Cache Rust build
+
+jobs:
+  build-rust-cache:
+    name: Build and cache rust code
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Rust
+        uses: Swatinem/rust-cache@v2
+        with:
+          shared-key: nodejs
+
+      - name: Build NAPI bindings for the cache
+        run: |
+          cargo build --release

@@ -1,0 +1,152 @@
+name: Build @ironfish/rust-nodejs NPM Packages
+
+env:
+  DEBUG: 'napi:*'
+  MACOSX_DEPLOYMENT_TARGET: '10.13'
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        settings:
+          - host: ubuntu-22.04
+            target: x86_64-apple-darwin
+
+          - host: windows-latest
+            target: x86_64-pc-windows-msvc
+
+          # intentionally macos, needed to cross-compile to lower libc abi
+          - host: macos-latest
+            target: x86_64-unknown-linux-gnu
+
+          - host: ubuntu-22.04
+            target: x86_64-unknown-linux-musl
+
+          - host: ubuntu-22.04
+            target: aarch64-apple-darwin
+
+          - host: ubuntu-22.04
+            target: aarch64-unknown-linux-gnu
+
+          - host: ubuntu-22.04
+            target: aarch64-unknown-linux-musl
+
+    name: Build ${{ matrix.settings.target }}
+    runs-on: ${{ matrix.settings.host }}
+    steps:
+      - name: Record CPU information
+        run: |
+          ${{ contains(matrix.settings.host, 'ubuntu-') && 'cat /proc/cpuinfo' || '' }}
+          ${{ contains(matrix.settings.host, 'macos-') && 'sysctl -a | grep machdep.cpu' || '' }}
+          ${{ contains(matrix.settings.host, 'windows-') && 'Get-WmiObject -Class Win32_Processor -ComputerName.' || '' }}
+
+      - name: Check out Git repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: yarn
+
+      - name: Install Rust
+        run: |
+          rustup target add ${{ matrix.settings.target }}
+
+      - name: Install ziglang
+        uses: goto-bus-stop/setup-zig@v2
+        with:
+          version: 0.10.0
+
+      - name: Install dependencies
+        run: npm install --no-workspaces
+        working-directory: ./ironfish-rust-nodejs
+
+      - name: Build
+        run: yarn build ${{ matrix.settings.target != 'x86_64-pc-windows-msvc' && '--zig' || '' }} ${{ matrix.settings.target == 'x86_64-unknown-linux-gnu' && '--zig-abi-suffix=2.17' || ''}} --target ${{ matrix.settings.target }}
+        working-directory: ./ironfish-rust-nodejs
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: bindings-${{ matrix.settings.target }}
+          path: ironfish-rust-nodejs/*.node
+          if-no-files-found: error
+
+  test:
+    needs:
+      - build
+    strategy:
+      fail-fast: false
+      matrix:
+        settings:
+          - host: macos-13
+            target: x86_64-apple-darwin
+
+          - host: macos-latest
+            target: aarch64-apple-darwin
+
+          - host: windows-latest
+            target: x86_64-pc-windows-msvc
+
+          - host: ubuntu-22.04
+            target: x86_64-unknown-linux-gnu
+            docker: node:18-slim
+
+          - host: ubuntu-22.04
+            target: x86_64-unknown-linux-musl
+            docker: node:18-alpine
+
+          - host: ubuntu-22.04
+            target: aarch64-unknown-linux-gnu
+            docker: ghcr.io/napi-rs/napi-rs/nodejs:aarch64-16
+
+          - host: ubuntu-22.04
+            target: aarch64-unknown-linux-musl
+            docker: arm64v8/node:18-alpine
+            platform: linux/arm64/v8
+
+    name: Test bindings for ${{ matrix.settings.target }}
+    runs-on: ${{ matrix.settings.host }}
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU for Docker
+        if: ${{ matrix.settings.docker }}
+        run: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: bindings-${{ matrix.settings.target }}
+          path: ./ironfish-rust-nodejs
+
+      - name: Install dependencies
+        run: npm install --no-workspaces
+        working-directory: ./ironfish-rust-nodejs
+
+      - name: Run tests in Docker
+        uses: addnab/docker-run-action@v3
+        if: ${{ matrix.settings.docker }}
+        with:
+          image: ${{ matrix.settings.docker }}
+          options: ${{ matrix.settings.platform && format('--platform {0}', matrix.settings.platform) || ''}} -v ${{ github.workspace }}:/build -w /build/ironfish-rust-nodejs
+          run: |
+            set -e
+            npm run test:slow
+
+      - name: Run tests natively
+        if: ${{ !matrix.settings.docker }}
+        run: npm run test:slow
+        working-directory: ./ironfish-rust-nodejs

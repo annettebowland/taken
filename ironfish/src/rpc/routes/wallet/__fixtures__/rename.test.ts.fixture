@@ -1,0 +1,34 @@
+{
+  "Route wallet/rename renames existing account": [
+    {
+      "value": {
+        "encrypted": false,
+        "version": 4,
+        "id": "51d16343-2208-4292-acd2-3a9faf7df614",
+        "name": "existingAccount",
+        "spendingKey": "72bff75207173295035d32f49be8eda9af74a26027cb07cd1135004568526073",
+        "viewKey": "4c7dbc7b658d594f3cd988e3e690ec76057e50fa88b1cef7bb374e9774722ecf988cbbcbb4c54983b6a1a83881de5fb62bba315efde89679a3e59b461b4191ef",
+        "incomingViewKey": "592957bf4b938c548024b4b15167abc7731bed3bf2e87470c3b2b5cc1cd12d04",
+        "outgoingViewKey": "ed259e6b85948195013680cb771e03530dbb183ce7e24f3db99ff20c9426bec9",
+        "publicAddress": "8408c05c5b7e0dd088f8dc605ed854f41d10693428d55d40eeb595b12027e2ef",
+        "createdAt": {
+          "sequence": 1,
+          "hash": {
+            "type": "Buffer",
+            "data": "base64:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+          }
+        },
+        "scanningEnabled": true,
+        "proofAuthorizingKey": "1b852ad258a97bd65e05123d17fcb166358759de840511985ea3aaa880e57507",
+        "ledger": false
+      },
+      "head": {
+        "hash": {
+          "type": "Buffer",
+          "data": "base64:R5HXrp+X3xAO8VWOhHctagm0N2I4goP3XG8goyqIqoY="
+        },
+        "sequence": 1
+      }
+    }
+  ]
+}

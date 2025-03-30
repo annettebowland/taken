@@ -1,0 +1,61 @@
+name: Deploy @ironfish/rust-nodejs NPM Packages
+
+env:
+  DEBUG: 'napi:*'
+  MACOSX_DEPLOYMENT_TARGET: '10.13'
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    uses: ./.github/workflows/build-ironfish-rust-nodejs.yml
+
+  publish:
+    name: Publish
+    runs-on: ubuntu-22.04
+    needs:
+      - build-and-test
+    defaults:
+      run:
+        working-directory: ./ironfish-rust-nodejs
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          registry-url: 'https://registry.npmjs.org'
+          cache: yarn
+
+      - name: Install dependencies
+        run: npm install --no-workspaces
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ironfish-rust-nodejs/artifacts
+
+      - name: List packages
+        run: ls -R .
+        shell: bash
+
+      - name: Verify artifacts exist
+        run: |
+          if [ -z "$(ls -A './artifacts')" ]; then
+            echo "artifacts folder was empty. ironfish-rust-nodejs artifacts were not uploaded correctly."
+            exit 1
+          fi
+
+      - name: Move and publish artifacts
+        run: yarn artifacts
+
+      - name: List packages
+        run: ls -R ./npm
+
+      - name: Publish
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

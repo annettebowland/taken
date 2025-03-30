@@ -1,0 +1,34 @@
+{
+  "": [
+    {
+      "value": {
+        "encrypted": false,
+        "version": 4,
+        "id": "43d4c4f9-23b3-4fc4-b173-04720d27666e",
+        "name": "test",
+        "spendingKey": "068f3bc7b2c393a3a6ec9668b1c2949d98409637de4f977aa3712f538dad210b",
+        "viewKey": "6f576da2b9fcb080f5138c38880e39b717e80a565baf1deaa88374e5ffb6e86fbbfb0826fe72bdde96a08ec6afc53ca6fab76ca94cd5f47d4830e71e0eda5414",
+        "incomingViewKey": "aaa0b7799c030c6a8a5445518d7d2b51a1f178cbff05b58ae1693cd75e3ff001",
+        "outgoingViewKey": "b8007de0f257a45b77f7b2472fb19281f8a0df3b105de0e3f997e4eded34d2dc",
+        "publicAddress": "c9298c541419cb2571057219d304981a3eefe69d3beea48ec908bee1a5e5dbab",
+        "createdAt": {
+          "sequence": 1,
+          "hash": {
+            "type": "Buffer",
+            "data": "base64:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+          }
+        },
+        "scanningEnabled": true,
+        "proofAuthorizingKey": "0a47ab991e04fae5d91d40070e0b5da1071f3a522c70dcc218539aac11971605",
+        "ledger": false
+      },
+      "head": {
+        "hash": {
+          "type": "Buffer",
+          "data": "base64:R5HXrp+X3xAO8VWOhHctagm0N2I4goP3XG8goyqIqoY="
+        },
+        "sequence": 1
+      }
+    }
+  ]
+}

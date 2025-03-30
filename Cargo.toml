@@ -1,0 +1,19 @@
+[workspace]
+resolver = "2"
+
+members = [
+    "benchmarks",
+    "ironfish-rust",
+    "ironfish-rust-nodejs",
+    "ironfish-rust-wasm",
+    "ironfish-zkp",
+]
+
+[workspace.package]
+authors = ["Iron Fish <contact@ironfish.network> (https://ironfish.network)"]
+edition = "2021"
+homepage = "https://ironfish.network/"
+repository = "https://github.com/iron-fish/ironfish"
+
+[profile.release]
+debug = true
