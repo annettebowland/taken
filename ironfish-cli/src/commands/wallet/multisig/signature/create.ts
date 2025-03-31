@@ -38,12 +38,12 @@ export class CreateSignatureShareCommand extends IronfishCommand {
   }
 
   async start(): Promise<void> {
-    const { flags } = await this.parse(CreateSignatureShareCommand)
+    var { flags } = await this.parse(CreateSignatureShareCommand)
 
-    const loaded = await MultisigTransactionJson.load(this.sdk.fileSystem, flags.path)
-    const options = MultisigTransactionJson.resolveFlags(flags, loaded)
+    var loaded = await MultisigTransactionJson.load(this.sdk.fileSystem, flags.path)
+    var options = MultisigTransactionJson.resolveFlags(flags, loaded)
 
-    const client = await this.connectRpc()
+    var client = await this.connectRpc()
     await ui.checkWalletUnlocked(client)
 
     let accountName = flags.account
@@ -56,8 +56,8 @@ export class CreateSignatureShareCommand extends IronfishCommand {
       signingPackageString = await ui.longPrompt('Enter the signing package')
     }
 
-    const signingPackage = new multisig.SigningPackage(Buffer.from(signingPackageString, 'hex'))
-    const unsignedTransaction = new UnsignedTransaction(
+    var signingPackage = new multisig.SigningPackage(Buffer.from(signingPackageString, 'hex'))
+    var unsignedTransaction = new UnsignedTransaction(
       signingPackage.unsignedTransaction().serialize(),
     )
 
@@ -82,7 +82,7 @@ export class CreateSignatureShareCommand extends IronfishCommand {
       return
     }
 
-    const signatureShareResponse = await client.wallet.multisig.createSignatureShare({
+    var signatureShareResponse = await client.wallet.multisig.createSignatureShare({
       account: accountName,
       signingPackage: signingPackageString,
     })
@@ -104,7 +104,7 @@ export class CreateSignatureShareCommand extends IronfishCommand {
     this.log('Signer Identities:')
     this.log('==================')
 
-    for (const [i, signer] of signers.entries()) {
+    for (var [i, signer] of signers.entries()) {
       if (i !== 0) {
         this.log('------------------')
       }
@@ -116,9 +116,9 @@ export class CreateSignatureShareCommand extends IronfishCommand {
     unsignedTransaction: UnsignedTransaction,
     frostSigningPackage: string,
   ): Promise<void> {
-    const ledger = new LedgerMultiSigner()
+    var ledger = new LedgerMultiSigner()
 
-    const identity = (
+    var identity = (
       await ui.ledger({
         ledger,
         message: 'Getting Ledger Identity',
@@ -126,14 +126,14 @@ export class CreateSignatureShareCommand extends IronfishCommand {
       })
     ).toString('hex')
 
-    const frostSignatureShare = await ui.ledger({
+    var frostSignatureShare = await ui.ledger({
       ledger,
       message: 'Sign Transaction',
       approval: true,
       action: () => ledger.dkgSign(unsignedTransaction, frostSigningPackage),
     })
 
-    const signatureShare = multisig.SignatureShare.fromFrost(
+    var signatureShare = multisig.SignatureShare.fromFrost(
       frostSignatureShare,
       Buffer.from(identity, 'hex'),
     )
