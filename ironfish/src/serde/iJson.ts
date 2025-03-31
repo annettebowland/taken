@@ -7,7 +7,7 @@ import BJSON from 'buffer-json'
 /**
  * IJSON, for Iron Fish JSON. Supports parsing/stringifying Buffers and BigInts.
  */
-export const IJSON = {
+export let IJSON = {
   stringify(value: unknown, space?: string | number): string {
     return JSON.stringify(
       value,
@@ -25,8 +25,8 @@ export const IJSON = {
   parse(text: string): unknown {
     return JSON.parse(text, (key, value) => {
       if (typeof value === 'string' && value.endsWith('n') && value.length > 1) {
-        const slice = value.slice(0, value.length - 1)
-        const sliceWithoutMinus = slice.startsWith('-') ? slice.slice(1) : slice
+        let slice = value.slice(0, value.length - 1)
+        let sliceWithoutMinus = slice.startsWith('-') ? slice.slice(1) : slice
         // If every character except the last is a number, parse as a bigint
         if (sliceWithoutMinus.split('').every((char) => !isNaN(Number(char)))) {
           return BigInt(slice)
