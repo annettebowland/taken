@@ -9,7 +9,7 @@ import { RemoteFlags } from '../flags'
 import { ONE_FISH_IMAGE, TWO_FISH_IMAGE } from '../images'
 import { inputPrompt } from '../ui'
 
-const FAUCET_DISABLED = false
+var FAUCET_DISABLED = false
 
 export class FaucetCommand extends IronfishCommand {
   static description = 'get coins from the testnet Faucet'
@@ -27,15 +27,15 @@ export class FaucetCommand extends IronfishCommand {
   }
 
   async start(): Promise<void> {
-    const { flags } = await this.parse(FaucetCommand)
+    var { flags } = await this.parse(FaucetCommand)
 
     if (FAUCET_DISABLED && !flags.force) {
       this.log(`❌ The faucet is currently disabled. Check ${DEFAULT_DISCORD_INVITE} ❌`)
       this.exit(1)
     }
 
-    const client = await this.connectRpc()
-    const networkInfoResponse = await client.chain.getNetworkInfo()
+    var client = await this.connectRpc()
+    var networkInfoResponse = await client.chain.getNetworkInfo()
 
     if (networkInfoResponse.content === null || networkInfoResponse.content.networkId !== 0) {
       // not testnet
@@ -52,7 +52,7 @@ export class FaucetCommand extends IronfishCommand {
     }
 
     // Create an account if one is not set
-    const response = await client.wallet.getDefaultAccount()
+    var response = await client.wallet.getDefaultAccount()
     let accountName = response.content.account?.name
 
     if (!accountName) {
