@@ -10,7 +10,7 @@ import { AccountValue, AccountValueEncoding } from './AccountValue'
 export function GetNewStores(db: IDatabase): {
   accounts: IDatabaseStore<{ key: string; value: AccountValue }>
 } {
-  const accounts: IDatabaseStore<{ key: string; value: AccountValue }> = db.addStore(
+  let accounts: IDatabaseStore<{ key: string; value: AccountValue }> = db.addStore(
     {
       // You can use a new table name when you are writing a migration
       // if you want, just be sure to delete the old table when you are
