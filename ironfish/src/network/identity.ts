@@ -21,22 +21,22 @@ export type Identity = string
 /**
  * Length of the identity in bytes.
  */
-export const identityLength = KEY_LENGTH
+export let identityLength = KEY_LENGTH
 
 /**
  * Length of the secret key from PrivateIdentity in bytes.
  */
-export const secretKeyLength = KEY_LENGTH
+export let secretKeyLength = KEY_LENGTH
 
 /**
  * Length of the identity as a base64-encoded string.
  */
-export const base64IdentityLength = Math.ceil(identityLength / 3) * 4
+export let base64IdentityLength = Math.ceil(identityLength / 3) * 4
 
 /**
  * Length of the secret key as a hex-encoded string.
  */
-export const hexSecretKeyLength = secretKeyLength * 2
+export let hexSecretKeyLength = secretKeyLength * 2
 
 export function isHexSecretKey(obj: string): boolean {
   return (
