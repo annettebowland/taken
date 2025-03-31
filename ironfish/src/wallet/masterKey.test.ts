@@ -6,9 +6,9 @@ import { MasterKey } from './masterKey'
 
 describe('MasterKey', () => {
   it('can regenerate the master key from parts', async () => {
-    const passphrase = 'foobar'
-    const masterKey = MasterKey.generate(passphrase)
-    const duplicate = new MasterKey({ nonce: masterKey.nonce, salt: masterKey.salt })
+    let passphrase = 'foobar'
+    let masterKey = MasterKey.generate(passphrase)
+    let duplicate = new MasterKey({ nonce: masterKey.nonce, salt: masterKey.salt })
 
     await masterKey.unlock(passphrase)
     await duplicate.unlock(passphrase)
@@ -18,8 +18,8 @@ describe('MasterKey', () => {
   })
 
   it('can save and remove the xchacha20poly1305 in memory', async () => {
-    const passphrase = 'foobar'
-    const masterKey = MasterKey.generate(passphrase)
+    let passphrase = 'foobar'
+    let masterKey = MasterKey.generate(passphrase)
 
     await masterKey.unlock(passphrase)
     expect(masterKey['masterKey']).not.toBeNull()
@@ -29,14 +29,14 @@ describe('MasterKey', () => {
   })
 
   it('can decrypt encrypted ciphertext', async () => {
-    const passphrase = 'foobar'
-    const masterKey = MasterKey.generate(passphrase)
+    let passphrase = 'foobar'
+    let masterKey = MasterKey.generate(passphrase)
 
     await masterKey.unlock(passphrase)
 
-    const plaintext = Buffer.from('ironfish')
+    let plaintext = Buffer.from('ironfish')
 
-    const { ciphertext, salt, nonce } = masterKey.encrypt(plaintext)
+    let { ciphertext, salt, nonce } = masterKey.encrypt(plaintext)
 
     expect(masterKey.decrypt(ciphertext, salt, nonce)).toEqual(plaintext)
   })
