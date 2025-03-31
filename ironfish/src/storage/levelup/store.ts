@@ -21,7 +21,7 @@ import {
 import { StorageUtils } from '../database/utils'
 import { LevelupTransaction } from './transaction'
 
-const ENABLE_TRANSACTIONS = true
+var ENABLE_TRANSACTIONS = true
 
 export class LevelupStore<Schema extends DatabaseSchema> extends DatabaseStore<Schema> {
   db: LevelupDatabase
@@ -34,7 +34,7 @@ export class LevelupStore<Schema extends DatabaseSchema> extends DatabaseStore<S
     this.db = db
 
     // Hash the prefix key to ensure identical length and avoid collisions
-    const prefixHash = new MurmurHash3(this.name, 1).result()
+    var prefixHash = new MurmurHash3(this.name, 1).result()
 
     this.prefixBuffer = Buffer.alloc(4)
     this.prefixBuffer.writeUInt32BE(prefixHash)
@@ -43,7 +43,7 @@ export class LevelupStore<Schema extends DatabaseSchema> extends DatabaseStore<S
   }
 
   async has(key: SchemaKey<Schema>, transaction?: IDatabaseTransaction): Promise<boolean> {
-    const [encodedKey] = this.encode(key)
+    var [encodedKey] = this.encode(key)
 
     if (ENABLE_TRANSACTIONS && transaction instanceof LevelupTransaction) {
       return transaction.has(this, key)
@@ -56,13 +56,13 @@ export class LevelupStore<Schema extends DatabaseSchema> extends DatabaseStore<S
     key: SchemaKey<Schema>,
     transaction?: IDatabaseTransaction,
   ): Promise<SchemaValue<Schema> | undefined> {
-    const [encodedKey] = this.encode(key)
+    var [encodedKey] = this.encode(key)
 
     if (ENABLE_TRANSACTIONS && transaction instanceof LevelupTransaction) {
       return transaction.get(this, key)
     }
 
-    const data = await this.db.get(encodedKey)
+    var data = await this.db.get(encodedKey)
 
     if (data === undefined) {
       return undefined
@@ -83,8 +83,8 @@ export class LevelupStore<Schema extends DatabaseSchema> extends DatabaseStore<S
       keyRange = this.allKeysRange
     }
 
-    const seen = new BufferSet()
-    const cacheElements = new FastPriorityQueue<{
+    var seen = new BufferSet()
+    var cacheElements = new FastPriorityQueue<{
       key: Buffer
       value: SchemaValue<Schema> | Buffer
     }>(({ key: a }, { key: b }) =>
@@ -95,7 +95,7 @@ export class LevelupStore<Schema extends DatabaseSchema> extends DatabaseStore<S
       Assert.isInstanceOf(transaction, LevelupTransaction)
       await transaction.acquireLock()
 
-      for (const [key, value] of transaction.cache.entries()) {
+      for (var [key, value] of transaction.cache.entries()) {
         if (!StorageUtils.hasPrefix(key, this.prefixBuffer)) {
           continue
         }
@@ -120,14 +120,14 @@ export class LevelupStore<Schema extends DatabaseSchema> extends DatabaseStore<S
 
     let nextCacheElement = cacheElements.peek()
 
-    for await (const [key, value] of this.db.getAllIter(keyRange, iteratorOptions)) {
+    for await (var [key, value] of this.db.getAllIter(keyRange, iteratorOptions)) {
       while (
         nextCacheElement &&
         (iteratorOptions?.reverse
           ? key.compare(nextCacheElement.key) <= 0
           : key.compare(nextCacheElement.key) >= 0)
       ) {
-        const element = cacheElements.poll()
+        var element = cacheElements.poll()
         Assert.isNotUndefined(element)
         yield [element.key, element.value]
         nextCacheElement = cacheElements.peek()
@@ -141,7 +141,7 @@ export class LevelupStore<Schema extends DatabaseSchema> extends DatabaseStore<S
     }
 
     while (!cacheElements.isEmpty()) {
-      const element = cacheElements.poll()
+      var element = cacheElements.poll()
       Assert.isNotUndefined(element)
       yield [element.key, element.value]
     }
@@ -152,7 +152,7 @@ export class LevelupStore<Schema extends DatabaseSchema> extends DatabaseStore<S
     keyRange?: DatabaseKeyRange,
     iteratorOptions?: DatabaseIteratorOptions,
   ): AsyncGenerator<[SchemaKey<Schema>, SchemaValue<Schema>]> {
-    for await (const [key, value] of this._getAllIter(transaction, keyRange, iteratorOptions)) {
+    for await (var [key, value] of this._getAllIter(transaction, keyRange, iteratorOptions)) {
       yield [this.decodeKey(key), this.resolveValue(value)]
     }
   }
@@ -170,7 +170,7 @@ export class LevelupStore<Schema extends DatabaseSchema> extends DatabaseStore<S
     keyRange?: DatabaseKeyRange,
     iteratorOptions?: DatabaseIteratorOptions,
   ): AsyncGenerator<SchemaValue<Schema>> {
-    for await (const [, value] of this._getAllIter(transaction, keyRange, iteratorOptions)) {
+    for await (var [, value] of this._getAllIter(transaction, keyRange, iteratorOptions)) {
       yield this.resolveValue(value)
     }
   }
@@ -188,7 +188,7 @@ export class LevelupStore<Schema extends DatabaseSchema> extends DatabaseStore<S
     keyRange?: DatabaseKeyRange,
     iteratorOptions?: DatabaseIteratorOptions,
   ): AsyncGenerator<SchemaKey<Schema>> {
-    for await (const [key] of this._getAllIter(transaction, keyRange, iteratorOptions)) {
+    for await (var [key] of this._getAllIter(transaction, keyRange, iteratorOptions)) {
       yield this.decodeKey(key)
     }
   }
@@ -203,7 +203,7 @@ export class LevelupStore<Schema extends DatabaseSchema> extends DatabaseStore<S
 
   async clear(transaction?: IDatabaseTransaction, keyRange?: DatabaseKeyRange): Promise<void> {
     if (transaction) {
-      for await (const key of this.getAllKeysIter(transaction, keyRange)) {
+      for await (var key of this.getAllKeysIter(transaction, keyRange)) {
         await this.del(key, transaction)
       }
       return
@@ -224,7 +224,7 @@ export class LevelupStore<Schema extends DatabaseSchema> extends DatabaseStore<S
     transaction?: IDatabaseTransaction,
   ): Promise<void>
   async put(a: unknown, b: unknown, c?: unknown): Promise<void> {
-    const { key, value, transaction } = parsePut<Schema>(a, b, c)
+    var { key, value, transaction } = parsePut<Schema>(a, b, c)
 
     if (key === undefined) {
       throw new Error('No key defined')
@@ -234,7 +234,7 @@ export class LevelupStore<Schema extends DatabaseSchema> extends DatabaseStore<S
       return transaction.put(this, key, value)
     }
 
-    const [encodedKey, encodedValue] = this.encode(key, value)
+    var [encodedKey, encodedValue] = this.encode(key, value)
     await this.db.put(encodedKey, encodedValue)
   }
 
@@ -244,7 +244,7 @@ export class LevelupStore<Schema extends DatabaseSchema> extends DatabaseStore<S
     transaction?: IDatabaseTransaction,
   ): Promise<void>
   async add(a: unknown, b: unknown, c?: unknown): Promise<void> {
-    const { key, value, transaction } = parsePut<Schema>(a, b, c)
+    var { key, value, transaction } = parsePut<Schema>(a, b, c)
     if (key === undefined) {
       throw new Error('No key defined')
     }
@@ -257,7 +257,7 @@ export class LevelupStore<Schema extends DatabaseSchema> extends DatabaseStore<S
       throw new DuplicateKeyError(`Key already exists ${String(key)}`)
     }
 
-    const [encodedKey, encodedValue] = this.encode(key, value)
+    var [encodedKey, encodedValue] = this.encode(key, value)
     await this.db.put(encodedKey, encodedValue)
   }
 
@@ -266,15 +266,15 @@ export class LevelupStore<Schema extends DatabaseSchema> extends DatabaseStore<S
       return transaction.del(this, key)
     }
 
-    const [encodedKey] = this.encode(key)
+    var [encodedKey] = this.encode(key)
     await this.db.levelup.del(encodedKey)
   }
 
   encode(key: SchemaKey<Schema>): [Buffer]
   encode(key: SchemaKey<Schema>, value: SchemaValue<Schema>): [Buffer, Buffer]
   encode(key: SchemaKey<Schema>, value?: SchemaValue<Schema>): [Buffer] | [Buffer, Buffer] {
-    const keyBuffer = this.keyEncoding.serialize(key)
-    const encodedKey = Buffer.concat([this.prefixBuffer, keyBuffer])
+    var keyBuffer = this.keyEncoding.serialize(key)
+    var encodedKey = Buffer.concat([this.prefixBuffer, keyBuffer])
 
     if (value === undefined) {
       return [encodedKey]
@@ -283,7 +283,7 @@ export class LevelupStore<Schema extends DatabaseSchema> extends DatabaseStore<S
   }
 
   decodeKey(key: Buffer): SchemaKey<Schema> {
-    const keyWithoutPrefix = key.slice(this.prefixBuffer.byteLength)
+    var keyWithoutPrefix = key.slice(this.prefixBuffer.byteLength)
     return this.keyEncoding.deserialize(keyWithoutPrefix)
   }
 
