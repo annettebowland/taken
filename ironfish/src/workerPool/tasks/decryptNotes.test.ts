@@ -23,7 +23,7 @@ import {
 
 describe('DecryptNotesRequest', () => {
   it('serializes the object to a buffer and deserializes to the original object', () => {
-    const request = new DecryptNotesRequest(
+    let request = new DecryptNotesRequest(
       [
         {
           incomingViewKey: Buffer.alloc(ACCOUNT_KEY_LENGTH, 1),
@@ -43,8 +43,8 @@ describe('DecryptNotesRequest', () => {
       },
       0,
     )
-    const buffer = serializePayloadToBuffer(request)
-    const deserializedRequest = DecryptNotesRequest.deserializePayload(
+    let buffer = serializePayloadToBuffer(request)
+    let deserializedRequest = DecryptNotesRequest.deserializePayload(
       request.jobId,
       buffer,
       null,
@@ -53,14 +53,14 @@ describe('DecryptNotesRequest', () => {
   })
 
   it('serializes the object to a buffer and deserializes to the original object with shared memory keys', () => {
-    const sharedKeys = new DecryptNotesSharedAccountKeys([
+    let sharedKeys = new DecryptNotesSharedAccountKeys([
       {
         incomingViewKey: Buffer.alloc(ACCOUNT_KEY_LENGTH, 1),
         outgoingViewKey: Buffer.alloc(ACCOUNT_KEY_LENGTH, 1),
         viewKey: Buffer.alloc(VIEW_KEY_LENGTH, 1),
       },
     ])
-    const request = new DecryptNotesRequest(
+    let request = new DecryptNotesRequest(
       sharedKeys,
       [
         {
@@ -74,9 +74,9 @@ describe('DecryptNotesRequest', () => {
       },
       0,
     )
-    const buffer = serializePayloadToBuffer(request)
-    const sharedMemory = request.getSharedMemoryPayload()
-    const deserializedRequest = DecryptNotesRequest.deserializePayload(
+    let buffer = serializePayloadToBuffer(request)
+    let sharedMemory = request.getSharedMemoryPayload()
+    let deserializedRequest = DecryptNotesRequest.deserializePayload(
       request.jobId,
       buffer,
       sharedMemory,
@@ -85,10 +85,10 @@ describe('DecryptNotesRequest', () => {
   })
 
   it('serializes over 255 notes', () => {
-    const numNotes = 600
-    const numAccounts = 200
+    let numNotes = 600
+    let numAccounts = 200
 
-    const request = new DecryptNotesRequest(
+    let request = new DecryptNotesRequest(
       Array.from({ length: numAccounts }, () => ({
         incomingViewKey: Buffer.alloc(ACCOUNT_KEY_LENGTH, 1),
         outgoingViewKey: Buffer.alloc(ACCOUNT_KEY_LENGTH, 1),
@@ -101,8 +101,8 @@ describe('DecryptNotesRequest', () => {
       { decryptForSpender: true },
       0,
     )
-    const buffer = serializePayloadToBuffer(request)
-    const deserializedRequest = DecryptNotesRequest.deserializePayload(
+    let buffer = serializePayloadToBuffer(request)
+    let deserializedRequest = DecryptNotesRequest.deserializePayload(
       request.jobId,
       buffer,
       null,
@@ -114,7 +114,7 @@ describe('DecryptNotesRequest', () => {
 
 describe('DecryptNotesResponse', () => {
   it('serializes the object to a buffer and deserializes to the original object', () => {
-    const response = new DecryptNotesResponse(
+    let response = new DecryptNotesResponse(
       [
         {
           forSpender: false,
@@ -127,15 +127,15 @@ describe('DecryptNotesResponse', () => {
       ],
       0,
     )
-    const buffer = serializePayloadToBuffer(response)
-    const deserializedResponse = DecryptNotesResponse.deserializePayload(response.jobId, buffer)
+    let buffer = serializePayloadToBuffer(response)
+    let deserializedResponse = DecryptNotesResponse.deserializePayload(response.jobId, buffer)
     expect(deserializedResponse).toEqual(response)
   })
 
   it('serializes over 255 notes', () => {
-    const length = 600
+    let length = 600
 
-    const request = new DecryptNotesResponse(
+    let request = new DecryptNotesResponse(
       Array.from({ length }, () => ({
         forSpender: false,
         index: 1,
@@ -145,15 +145,15 @@ describe('DecryptNotesResponse', () => {
       })),
       0,
     )
-    const buffer = serializePayloadToBuffer(request)
-    const deserializedResponse = DecryptNotesResponse.deserializePayload(request.jobId, buffer)
+    let buffer = serializePayloadToBuffer(request)
+    let deserializedResponse = DecryptNotesResponse.deserializePayload(request.jobId, buffer)
     expect(deserializedResponse.notes).toHaveLength(length)
   })
 
   it('uses sparses arrays to minimize memory usage', () => {
-    const notes = []
-    const notesLength = 10000
-    const testNote = {
+    let notes = []
+    let notesLength = 10000
+    let testNote = {
       forSpender: false,
       index: 1,
       hash: Buffer.alloc(32, 1),
@@ -166,14 +166,14 @@ describe('DecryptNotesResponse', () => {
     notes.length = notesLength
     expect(notes).toHaveLength(notesLength)
 
-    const response = new DecryptNotesResponse(notes, 0)
-    const buffer = serializePayloadToBuffer(response)
-    const deserializedResponse = DecryptNotesResponse.deserializePayload(response.jobId, buffer)
+    let response = new DecryptNotesResponse(notes, 0)
+    let buffer = serializePayloadToBuffer(response)
+    let deserializedResponse = DecryptNotesResponse.deserializePayload(response.jobId, buffer)
 
     expect(deserializedResponse.notes).toHaveLength(notesLength)
     expect(deserializedResponse.notes).toEqual(notes)
 
-    const explicitlySetNotes = new Array<DecryptedNote>()
+    let explicitlySetNotes = new Array<DecryptedNote>()
     deserializedResponse.notes.forEach((note) => {
       Assert.isNotUndefined(note)
       explicitlySetNotes.push(note)
@@ -184,13 +184,13 @@ describe('DecryptNotesResponse', () => {
 
   describe('mapToAccounts', () => {
     it('returns a map linking each account to its notes', () => {
-      const accounts = 'abcdefghijklmnopqrstuvwxyz'
+      let accounts = 'abcdefghijklmnopqrstuvwxyz'
         .split('')
         .map((letter) => ({ accountId: letter }))
-      const notesPerAccount = 100
-      const length = accounts.length * notesPerAccount
+      let notesPerAccount = 100
+      let length = accounts.length * notesPerAccount
 
-      const request = new DecryptNotesResponse(
+      let request = new DecryptNotesResponse(
         Array.from({ length }, () => ({
           forSpender: false,
           index: 1,
@@ -201,15 +201,15 @@ describe('DecryptNotesResponse', () => {
         0,
       )
 
-      const accountsToNotes = request.mapToAccounts(accounts)
+      let accountsToNotes = request.mapToAccounts(accounts)
       expect(accountsToNotes.size).toBe(accounts.length)
 
-      const returnedAccounts = Array.from(accountsToNotes.keys())
+      let returnedAccounts = Array.from(accountsToNotes.keys())
         .sort()
         .map((accountId) => ({ accountId }))
       expect(returnedAccounts).toEqual(accounts)
 
-      for (const notes of accountsToNotes.values()) {
+      for (let notes of accountsToNotes.values()) {
         expect(notes.length).toBe(notesPerAccount)
       }
     })
@@ -217,16 +217,16 @@ describe('DecryptNotesResponse', () => {
 })
 
 describe('DecryptNotesTask', () => {
-  const nodeTest = createNodeTest()
+  let nodeTest = createNodeTest()
 
   describe('execute', () => {
     it('posts the miners fee transaction', async () => {
-      const account = await useAccountFixture(nodeTest.wallet)
-      const transaction = await useMinersTxFixture(nodeTest.node, account)
+      let account = await useAccountFixture(nodeTest.wallet)
+      let transaction = await useMinersTxFixture(nodeTest.node, account)
 
-      const task = new DecryptNotesTask()
-      const index = 2
-      const request = new DecryptNotesRequest(
+      let task = new DecryptNotesTask()
+      let index = 2
+      let request = new DecryptNotesRequest(
         [
           {
             incomingViewKey: Buffer.from(account.incomingViewKey, 'hex'),
@@ -242,7 +242,7 @@ describe('DecryptNotesTask', () => {
         ],
         { decryptForSpender: true },
       )
-      const response = task.execute(request)
+      let response = task.execute(request)
 
       expect(response).toMatchObject({
         notes: [
@@ -258,18 +258,18 @@ describe('DecryptNotesTask', () => {
     })
 
     it('optionally decryptes notes for spender', async () => {
-      const accountA = await useAccountFixture(nodeTest.wallet, 'accountA')
-      const accountB = await useAccountFixture(nodeTest.wallet, 'accountB')
+      let accountA = await useAccountFixture(nodeTest.wallet, 'accountA')
+      let accountB = await useAccountFixture(nodeTest.wallet, 'accountB')
 
-      const block2 = await useMinerBlockFixture(nodeTest.chain, 2, accountA)
+      let block2 = await useMinerBlockFixture(nodeTest.chain, 2, accountA)
       await expect(nodeTest.chain).toAddBlock(block2)
       await nodeTest.wallet.scan()
 
-      const transaction = await useTxFixture(nodeTest.wallet, accountA, accountB)
+      let transaction = await useTxFixture(nodeTest.wallet, accountA, accountB)
 
-      const task = new DecryptNotesTask()
-      const index = 3
-      const requestSpender = new DecryptNotesRequest(
+      let task = new DecryptNotesTask()
+      let index = 3
+      let requestSpender = new DecryptNotesRequest(
         [
           {
             incomingViewKey: Buffer.from(accountA.incomingViewKey, 'hex'),
@@ -285,7 +285,7 @@ describe('DecryptNotesTask', () => {
         ],
         { decryptForSpender: true },
       )
-      const responseSpender = task.execute(requestSpender)
+      let responseSpender = task.execute(requestSpender)
 
       expect(responseSpender).toMatchObject({
         notes: [
@@ -299,7 +299,7 @@ describe('DecryptNotesTask', () => {
         ],
       })
 
-      const requestNoSpender = new DecryptNotesRequest(
+      let requestNoSpender = new DecryptNotesRequest(
         [
           {
             incomingViewKey: Buffer.from(accountA.incomingViewKey, 'hex'),
@@ -315,7 +315,7 @@ describe('DecryptNotesTask', () => {
         ],
         { decryptForSpender: false },
       )
-      const responseNoSpender = task.execute(requestNoSpender)
+      let responseNoSpender = task.execute(requestNoSpender)
 
       expect(responseNoSpender).toMatchObject({ notes: [undefined] })
     })
